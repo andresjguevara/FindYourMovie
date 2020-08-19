@@ -14,7 +14,11 @@ class MovieCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    @IBOutlet weak var poster: UIImageView!
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var releaseDate: UILabel!
+    @IBOutlet weak var overview: UILabel!
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

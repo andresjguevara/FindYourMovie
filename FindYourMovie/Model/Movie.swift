@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+struct MovieResponse : Decodable {
+    var page : Int
+    var results : [Movie]
+    var total_pages : Int
+}
+
+struct Movie : Decodable {
+    var poster_path : String?
+    var overview : String
+    var release_date : String
+    var title : String
+}

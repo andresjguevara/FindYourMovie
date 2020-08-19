@@ -9,23 +9,29 @@
 /* Begin PBXBuildFile section */
 		EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */; };
 		EDC85E3424EC2E8C0045E421 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */; };
-		EDC85E3624EC2E8C0045E421 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3524EC2E8C0045E421 /* ViewController.swift */; };
+		EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */; };
 		EDC85E3924EC2E8C0045E421 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDC85E3724EC2E8C0045E421 /* Main.storyboard */; };
 		EDC85E3C24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3A24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld */; };
 		EDC85E3E24EC2E8D0045E421 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDC85E3D24EC2E8D0045E421 /* Assets.xcassets */; };
 		EDC85E4124EC2E8D0045E421 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDC85E3F24EC2E8D0045E421 /* LaunchScreen.storyboard */; };
+		EDC85E4D24EC412C0045E421 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E4C24EC412C0045E421 /* MovieCell.swift */; };
+		EDC85E4F24EC59B10045E421 /* MovieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E4E24EC59B10045E421 /* MovieManager.swift */; };
+		EDC85E5224EC5C200045E421 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E5124EC5C200045E421 /* Movie.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		EDC85E2E24EC2E8B0045E421 /* FindYourMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindYourMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		EDC85E3524EC2E8C0045E421 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewController.swift; sourceTree = "<group>"; };
 		EDC85E3824EC2E8C0045E421 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EDC85E3B24EC2E8C0045E421 /* FindYourMovie.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FindYourMovie.xcdatamodel; sourceTree = "<group>"; };
 		EDC85E3D24EC2E8D0045E421 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDC85E4024EC2E8D0045E421 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDC85E4224EC2E8D0045E421 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDC85E4C24EC412C0045E421 /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
+		EDC85E4E24EC59B10045E421 /* MovieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieManager.swift; sourceTree = "<group>"; };
+		EDC85E5124EC5C200045E421 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,16 +64,59 @@
 		EDC85E3024EC2E8B0045E421 /* FindYourMovie */ = {
 			isa = PBXGroup;
 			children = (
+				EDC85E4824EC33F00045E421 /* Delegates */,
+				EDC85E4924EC33FA0045E421 /* Controllers */,
+				EDC85E4B24EC34110045E421 /* Views */,
+				EDC85E4A24EC34060045E421 /* Model */,
+				EDC85E4224EC2E8D0045E421 /* Info.plist */,
+				EDC85E5024EC59B60045E421 /* Network */,
+			);
+			path = FindYourMovie;
+			sourceTree = "<group>";
+		};
+		EDC85E4824EC33F00045E421 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
 				EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */,
 				EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */,
-				EDC85E3524EC2E8C0045E421 /* ViewController.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		EDC85E4924EC33FA0045E421 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EDC85E4A24EC34060045E421 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EDC85E3A24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld */,
+				EDC85E5124EC5C200045E421 /* Movie.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EDC85E4B24EC34110045E421 /* Views */ = {
+			isa = PBXGroup;
+			children = (
 				EDC85E3724EC2E8C0045E421 /* Main.storyboard */,
 				EDC85E3D24EC2E8D0045E421 /* Assets.xcassets */,
 				EDC85E3F24EC2E8D0045E421 /* LaunchScreen.storyboard */,
-				EDC85E4224EC2E8D0045E421 /* Info.plist */,
-				EDC85E3A24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld */,
+				EDC85E4C24EC412C0045E421 /* MovieCell.swift */,
 			);
-			path = FindYourMovie;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EDC85E5024EC59B60045E421 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				EDC85E4E24EC59B10045E421 /* MovieManager.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,9 +190,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDC85E3624EC2E8C0045E421 /* ViewController.swift in Sources */,
+				EDC85E5224EC5C200045E421 /* Movie.swift in Sources */,
+				EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */,
 				EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */,
 				EDC85E3C24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld in Sources */,
+				EDC85E4D24EC412C0045E421 /* MovieCell.swift in Sources */,
+				EDC85E4F24EC59B10045E421 /* MovieManager.swift in Sources */,
 				EDC85E3424EC2E8C0045E421 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -220,7 +272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -274,7 +326,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
