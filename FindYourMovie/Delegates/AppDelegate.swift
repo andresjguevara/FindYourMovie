@@ -5,13 +5,15 @@
 //  Created by Andres Guevara Caprio on 8/18/20.
 //  Copyright © 2020 Andres Guevara Caprio. All rights reserved.
 //
-
 import UIKit
 import CoreData
 
+@available(iOS 13.0, *)
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    
+   
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
