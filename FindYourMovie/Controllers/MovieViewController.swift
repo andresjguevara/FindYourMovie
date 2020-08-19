@@ -10,12 +10,20 @@ import UIKit
 
 class MovieViewController: UITableViewController {
     
+    @IBOutlet weak var movieSearchBar: UISearchBar!
     var movieSearch = [Movie]()
     var currentPage = 1
     var currentSearch = ""
+    var totalPages = 1
+    var last10searches = [String]()
+    
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let searches = self.defaults.array(forKey: "lastSearches") as? [String] {
+            self.last10searches = searches
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -28,6 +36,7 @@ class MovieViewController: UITableViewController {
         
         let movie = movieSearch[indexPath.row]
         cell.name.text = movie.title
+        cell.releaseDate.text = movie.release_date
         cell.overview.text = movie.overview
         cell.poster.load(string: movie.poster_path)
         return cell
@@ -37,22 +46,18 @@ class MovieViewController: UITableViewController {
         let currentPosition = indexPath.row
         let totalRows = movieSearch.count
         
-        if (Double(currentPosition)/Double(totalRows) >= 0.85) {
+        if (self.currentPage < self.totalPages && Double(currentPosition)/Double(totalRows) >= 0.9) {
             MovieManager.shared.getMoviesNames(query: currentSearch, page: String(currentPage + 1))
             { [weak self] results in
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 switch results {
-                case .success(let movies):
-                    DispatchQueue.main.async {
-                        self?.movieSearch.append(contentsOf: movies)
-                        self?.currentPage += 1
-                        self?.tableView.reloadData()
-                    }
-
+                case .success(let movieResult):
+                    self?.movieSearch.append(contentsOf: movieResult.0)
+                    self?.currentPage += 1
+                    self?.tableView.reloadData()
                 case .failure(let error):
-                    DispatchQueue.main.async {
-                        self?.showError(errorToDisplay : error)
-                    }
+                    self?.showError(errorToDisplay : error)
+                    
                 }
                 
             }
@@ -69,10 +74,10 @@ extension MovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         
-        guard let searchText = searchBar.text, !searchText.isEmpty else {
+        guard var searchText = searchBar.text, !searchText.isEmpty else {
             return
         }
-        
+        searchText = searchText.replacingOccurrences(of: " ", with: "+")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         
@@ -80,20 +85,27 @@ extension MovieViewController: UISearchBarDelegate {
         { [weak self] results in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             switch results {
-            case .success(let movies):
-                self?.movieSearch = movies
+            case .success(let movieResult):
+                self?.movieSearch = movieResult.0
+                self?.totalPages = movieResult.1
                 self?.currentSearch = searchText
                 self?.currentPage = 1
+                self?.last10searches.append(item: searchBar.text!)
+                self?.defaults.set(self?.last10searches, forKey: "lastSearches")
                 self?.tableView.reloadData()
             case .failure(let error):
                 self?.showError(errorToDisplay : error)
             }
             
         }
+        
     }
+    
+
+    
     func showError(errorToDisplay: MovieManager.MovieManagerError){
         
-        let alert = UIAlertController(title: "Error on Search", message: errorToDisplay.localizedDescription, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Error on Search", message: errorToDisplay.getCustomError(), preferredStyle: .alert)
         
         let ok = UIAlertAction(title: "OK", style: .default)
         alert.addAction(ok)
@@ -109,7 +121,9 @@ extension UIImageView {
         DispatchQueue.global().async { [weak self] in
             guard let url = string else {
                 if #available(iOS 13.0, *) {
-                    self?.image = UIImage(systemName: "questionmark.square")
+                    DispatchQueue.main.async {
+                        self?.image = UIImage(systemName: "questionmark.square")
+                    }
                 } else {
                     return
                 }
@@ -125,6 +139,15 @@ extension UIImageView {
             }
         }
         
+    }
+}
+
+extension Array {
+    mutating func append(item: String) {
+        if(self.count == 10){
+            self.removeLast()
+        }
+        self.insert(item as! Element, at: 0)
     }
 }
 
