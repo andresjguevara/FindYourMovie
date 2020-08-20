@@ -25,5 +25,13 @@ class MovieCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    func configure(movie: Movie){
+        self.name.text = movie.title
+        self.releaseDate.text = movie.release_date
+        self.overview.text = movie.overview
+        self.poster.load(urlAsString: movie.poster_path)
+        
+    }
 
 }

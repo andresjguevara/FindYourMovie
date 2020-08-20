@@ -52,8 +52,10 @@ class MovieManager {
     ///     - completion: A Result object is return.
     ///     -  result: On  success, a pair of movie results and page number is returned. On failure, a error enum is returned
     func getMoviesNames(query : String, page : String, completion: @escaping(_ result: Result<MovieResult,MovieManagerError>) -> Void) {
+        
+        let movieNameformatted = query.replacingOccurrences(of: " ", with: "+")
          
-        let getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(query)&page=\(page)"
+        let getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(movieNameformatted)&page=\(page)"
         
         guard let url = URL(string: getURL) else {
             DispatchQueue.main.async {
@@ -104,12 +106,9 @@ class MovieManager {
     ///
     /// - Important: The poster field of the movie gets mutated
     func setMoviePosterPath(movies :inout [Movie]) {
-        for (index, movie) in movies.enumerated() {
-            if movies[index].poster_path != nil {
-                movies[index].poster_path = "\(MovieManager.BASE_IMAGE_URL)\(movie.poster_path!)"
-            }
+        for (index, _) in movies.enumerated() {
+               guard let posterPath = movies[index].poster_path else { continue }
+               movies[index].poster_path = "\(MovieManager.BASE_IMAGE_URL)\(posterPath)"
         }
-            
     }
-    
 }

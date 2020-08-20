@@ -12,7 +12,7 @@ import UIKit
 class MovieSearchController: UITableViewController {
 
     var searches = [String]()
-    var parentController : MovieViewController? = nil
+    var parentController : MovieViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()

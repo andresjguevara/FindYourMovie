@@ -20,6 +20,7 @@ class MovieViewController: UITableViewController {
     var lastSearchesController : MovieSearchController!
     var searchController : UISearchController!
     let defaults = UserDefaults.standard
+    let FETCH_THRESHOLD = 0.9
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,18 +54,15 @@ class MovieViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         // Configure each cell
         let movie = movieSearch[indexPath.row]
-        cell.name.text = movie.title
-        cell.releaseDate.text = movie.release_date
-        cell.overview.text = movie.overview
-        cell.poster.load(string: movie.poster_path)
+        cell.configure(movie: movie)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let currentPosition = indexPath.row
         let totalRows = movieSearch.count
-        // If the user has scrolled more than 90% of the list, then get the next available page, if available
-        if (self.currentPage < self.totalPages && Double(currentPosition)/Double(totalRows) >= 0.9) {
+        // If the user has scrolled more than the set threshold of the list, then get the next available page, if available
+        if self.currentPage < self.totalPages && Double(currentPosition)/Double(totalRows) >= FETCH_THRESHOLD {
             requestMovies(movieName: self.currentSearch, paging: true)
         }
     }
@@ -78,7 +76,6 @@ class MovieViewController: UITableViewController {
     /// if false, the request will be done to the first page
     func requestMovies(movieName : String, paging: Bool = false)  {
         
-        let movieNameformatted = movieName.replacingOccurrences(of: " ", with: "+")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         var pageNumber : Int
@@ -88,24 +85,25 @@ class MovieViewController: UITableViewController {
             pageNumber = 1
         }
         
-        MovieManager.shared.getMoviesNames(query: movieNameformatted, page: String(pageNumber))
+        MovieManager.shared.getMoviesNames(query: movieName, page: String(pageNumber))
         { [weak self] results in
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            guard let self = self else {return}
             switch results {
             case .success(let movieResult):
                 if pageNumber > 1 {
-                    self?.movieSearch.append(contentsOf: movieResult.0)
-                    self?.currentPage += 1
+                    self.movieSearch.append(contentsOf: movieResult.0)
+                    self.currentPage += 1
                 } else {
-                    self?.movieSearch = movieResult.0
-                    self?.totalPages = movieResult.1
-                    self?.currentSearch = movieNameformatted
-                    self?.currentPage = 1
-                    self?.updateLastSearchResults(movieName: movieNameformatted)
+                    self.movieSearch = movieResult.0
+                    self.totalPages = movieResult.1
+                    self.currentSearch = movieName
+                    self.currentPage = 1
+                    self.updateLastSearchResults(movieName: movieName)
                 }
-                self?.tableView.reloadData()
+                self.tableView.reloadData()
             case .failure(let error):
-                self?.showError(errorToDisplay : error)
+                self.showError(errorToDisplay : error)
             }
         }
         
@@ -128,10 +126,10 @@ class MovieViewController: UITableViewController {
     /// - Parameter movieName: Name of the movie to add to the list.
     private func updateLastSearchResults(movieName: String) {
         if !last10searches.contains(movieName){
-            if(self.last10searches.count == 10){
+            if self.last10searches.count == 10 {
                 self.last10searches.removeLast()
             }
-            self.last10searches.insert(movieName.replacingOccurrences(of: "+", with: " "), at: 0)
+            self.last10searches.insert(movieName, at: 0)
             self.defaults.set(self.last10searches, forKey: "lastSearches")
         }
         
@@ -179,14 +177,14 @@ extension MovieViewController: UISearchResultsUpdating {
     
     // Called when the search bar's text has changed or when the search bar becomes first responder.
     func updateSearchResults(for searchController: UISearchController) {
-        // Update the resultsController's filtered items based on the search terms and suggested search token.
-        self.last10searches = defaults.array(forKey: "lastSearches") as! [String]
-        let lastSearches = self.last10searches
         
-        // Apply the filtered results to the search results table.
+        if let searches = self.defaults.array(forKey: "lastSearches") as? [String] {
+            self.last10searches = searches
+        }
+        
         if let resultsController = searchController.searchResultsController as? MovieSearchController {
             resultsController.parentController = self
-            resultsController.searches = lastSearches
+            resultsController.searches = self.last10searches
             resultsController.tableView.reloadData()
         }
     }
@@ -195,16 +193,10 @@ extension MovieViewController: UISearchResultsUpdating {
 
 
 extension UIImageView {
-    func load(string: String?) {
+    func load(urlAsString: String?) {
         DispatchQueue.global().async { [weak self] in
-            guard let url = string else {
-                if #available(iOS 13.0, *) {
-                    DispatchQueue.main.async {
-                        self?.image = UIImage(systemName: "questionmark.square")
-                    }
-                } else {
-                    return
-                }
+            guard let url = urlAsString else {
+                self?.setDefaultImage()
                 return
             }
             let newURL = URL(string: url)
@@ -215,6 +207,16 @@ extension UIImageView {
                     }
                 }
             }
+        }
+        
+    }
+    private func setDefaultImage() {
+        if #available(iOS 13.0, *) {
+        DispatchQueue.main.async {
+                self.image = UIImage(systemName: "questionmark.square")
+            }
+        } else {
+            return
         }
         
     }
