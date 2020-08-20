@@ -216,6 +216,7 @@ extension UIImageView {
                 self.image = UIImage(systemName: "questionmark.square")
             }
         } else {
+            self.image = UIImage(named: "ios12_not_available")
             return
         }
         

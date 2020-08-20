@@ -16,6 +16,7 @@ class MovieSearchController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = UIColor.lightGray
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SearchCell")
     }
 
@@ -27,7 +28,7 @@ class MovieSearchController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell")!
-        cell.textLabel?.text = searches[indexPath.row]
+        configureCell(cellToConfigure: cell, movieName: searches[indexPath.row])
         return cell
     }
     
@@ -36,6 +37,13 @@ class MovieSearchController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         parentController?.requestMovies(movieName: searches[indexPath.row])
         dismiss(animated: true, completion: nil)
+        
+    }
+    
+    private func configureCell(cellToConfigure: UITableViewCell, movieName : String){
+        cellToConfigure.textLabel?.text = movieName
+        cellToConfigure.textLabel?.font = UIFont(name: "Avenir Next", size: 17)
+        cellToConfigure.backgroundColor = UIColor.lightGray
         
     }
 
