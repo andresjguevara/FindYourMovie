@@ -8,23 +8,41 @@
 
 import UIKit
 
+/// Controller for main view. It is a Table View that contains a search controller to search for movies through a movie databse API.
+/// The last 10 movies are persisted locally and displayed as a suggestion when the user searches for movies
 class MovieViewController: UITableViewController {
     
-    @IBOutlet weak var movieSearchBar: UISearchBar!
     var movieSearch = [Movie]()
     var currentPage = 1
     var currentSearch = ""
     var totalPages = 1
     var last10searches = [String]()
-    
+    var lastSearchesController : MovieSearchController!
+    var searchController : UISearchController!
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Create an instance of the second controller once main controller loads
+        lastSearchesController = MovieSearchController()
+        // Make the second controller a search result controller
+        searchController = UISearchController(searchResultsController: lastSearchesController)
+        searchController.searchResultsUpdater = self
+        if #available(iOS 13.0, *) {
+            searchController.searchBar.searchTextField.placeholder = "Search for a Movie"
+        } else {
+            searchController.searchBar.placeholder = "Search for a Movie"
+        }
+        // Add search controller to navigation controller
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
+        definesPresentationContext = true
+        // Load latestes searches at loading time
         if let searches = self.defaults.array(forKey: "lastSearches") as? [String] {
             self.last10searches = searches
         }
-        // Do any additional setup after loading the view.
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -33,7 +51,7 @@ class MovieViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        
+        // Configure each cell
         let movie = movieSearch[indexPath.row]
         cell.name.text = movie.title
         cell.releaseDate.text = movie.release_date
@@ -45,24 +63,79 @@ class MovieViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let currentPosition = indexPath.row
         let totalRows = movieSearch.count
-        
+        // If the user has scrolled more than 90% of the list, then get the next available page, if available
         if (self.currentPage < self.totalPages && Double(currentPosition)/Double(totalRows) >= 0.9) {
-            MovieManager.shared.getMoviesNames(query: currentSearch, page: String(currentPage + 1))
-            { [weak self] results in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                switch results {
-                case .success(let movieResult):
+            requestMovies(movieName: self.currentSearch, paging: true)
+        }
+    }
+
+    
+    /// Makes a call to the API requesting movies. It updates the internal values for total pages, current search, current page, and movies
+    ///
+    ///- Parameters:
+    ///     - movieName: name of the movie to search
+    ///     - paging:indicates if the request requires a page number. If true, the page number will be updated to the next available page.
+    /// if false, the request will be done to the first page
+    func requestMovies(movieName : String, paging: Bool = false)  {
+        
+        let movieNameformatted = movieName.replacingOccurrences(of: " ", with: "+")
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
+        var pageNumber : Int
+        if paging {
+            pageNumber = self.currentPage + 1
+        } else {
+            pageNumber = 1
+        }
+        
+        MovieManager.shared.getMoviesNames(query: movieNameformatted, page: String(pageNumber))
+        { [weak self] results in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            switch results {
+            case .success(let movieResult):
+                if pageNumber > 1 {
                     self?.movieSearch.append(contentsOf: movieResult.0)
                     self?.currentPage += 1
-                    self?.tableView.reloadData()
-                case .failure(let error):
-                    self?.showError(errorToDisplay : error)
-                    
+                } else {
+                    self?.movieSearch = movieResult.0
+                    self?.totalPages = movieResult.1
+                    self?.currentSearch = movieNameformatted
+                    self?.currentPage = 1
+                    self?.updateLastSearchResults(movieName: movieNameformatted)
                 }
-                
+                self?.tableView.reloadData()
+            case .failure(let error):
+                self?.showError(errorToDisplay : error)
             }
-            
         }
+        
+    }
+    
+    /// Displays an error as an alert. It uses the parameters custom error message to display.
+    ///
+    /// - Parameter errorToDisplay: The type of error that was generated
+    private func showError(errorToDisplay: MovieManager.MovieManagerError){
+        
+        let alert = UIAlertController(title: "Error on Search", message: errorToDisplay.getCustomError(), preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(ok)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+    /// Updates the last searches done by the user. No duplicates are added and the size is kept to 10
+    ///
+    /// - Parameter movieName: Name of the movie to add to the list.
+    private func updateLastSearchResults(movieName: String) {
+        if !last10searches.contains(movieName){
+            if(self.last10searches.count == 10){
+                self.last10searches.removeLast()
+            }
+            self.last10searches.insert(movieName.replacingOccurrences(of: "+", with: " "), at: 0)
+            self.defaults.set(self.last10searches, forKey: "lastSearches")
+        }
+        
+        
     }
     
 }
@@ -72,49 +145,54 @@ class MovieViewController: UITableViewController {
 extension MovieViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
         
-        guard var searchText = searchBar.text, !searchText.isEmpty else {
+        searchBar.resignFirstResponder()
+        guard let searchText = searchBar.text, !searchText.isEmpty else {
             return
         }
-        searchText = searchText.replacingOccurrences(of: " ", with: "+")
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        
-        
-        MovieManager.shared.getMoviesNames(query: searchText)
-        { [weak self] results in
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
-            switch results {
-            case .success(let movieResult):
-                self?.movieSearch = movieResult.0
-                self?.totalPages = movieResult.1
-                self?.currentSearch = searchText
-                self?.currentPage = 1
-                self?.last10searches.append(item: searchBar.text!)
-                self?.defaults.set(self?.last10searches, forKey: "lastSearches")
-                self?.tableView.reloadData()
-            case .failure(let error):
-                self?.showError(errorToDisplay : error)
-            }
-            
-        }
+        requestMovies(movieName: searchText)
+        searchBar.text = ""
+        searchController.dismiss(animated: true, completion: nil)
         
     }
     
-
     
-    func showError(errorToDisplay: MovieManager.MovieManagerError){
+}
+
+// MARK: - UISearchControllerDelegate
+
+extension MovieViewController: UISearchControllerDelegate {
+    
+    func presentSearchController(_ searchController: UISearchController) {
+        if #available(iOS 13.0, *) {
+            searchController.showsSearchResultsController = true
+        } else {
+            show(searchController.searchResultsController!, sender: self )
+        }
         
-        let alert = UIAlertController(title: "Error on Search", message: errorToDisplay.getCustomError(), preferredStyle: .alert)
+    }
+}
+
+// MARK: - UISearchResultsUpdating
+
+extension MovieViewController: UISearchResultsUpdating {
+    
+    // Called when the search bar's text has changed or when the search bar becomes first responder.
+    func updateSearchResults(for searchController: UISearchController) {
+        // Update the resultsController's filtered items based on the search terms and suggested search token.
+        self.last10searches = defaults.array(forKey: "lastSearches") as! [String]
+        let lastSearches = self.last10searches
         
-        let ok = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(ok)
-        
-        present(alert, animated: true, completion: nil)
-        
+        // Apply the filtered results to the search results table.
+        if let resultsController = searchController.searchResultsController as? MovieSearchController {
+            resultsController.parentController = self
+            resultsController.searches = lastSearches
+            resultsController.tableView.reloadData()
+        }
     }
     
 }
+
 
 extension UIImageView {
     func load(string: String?) {
@@ -139,15 +217,6 @@ extension UIImageView {
             }
         }
         
-    }
-}
-
-extension Array {
-    mutating func append(item: String) {
-        if(self.count == 10){
-            self.removeLast()
-        }
-        self.insert(item as! Element, at: 0)
     }
 }
 

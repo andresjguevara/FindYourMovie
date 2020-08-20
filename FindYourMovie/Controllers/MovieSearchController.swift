@@ -8,17 +8,35 @@
 
 import UIKit
 
-class MovieSearchController: UITableViewCell {
+/// Controller used when the user is going to search for movies. This is a Table View that displays the last 10 searches made by the user.
+class MovieSearchController: UITableViewController {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    var searches = [String]()
+    var parentController : MovieViewController? = nil
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SearchCell")
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+    // MARK: - Table view data source
 
-        // Configure the view for the selected state
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searches.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell")!
+        cell.textLabel?.text = searches[indexPath.row]
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Tell the parent controller to make a movie request and dismiss this controller
+        tableView.deselectRow(at: indexPath, animated: true)
+        parentController?.requestMovies(movieName: searches[indexPath.row])
+        dismiss(animated: true, completion: nil)
+        
     }
 
 }

@@ -8,12 +8,14 @@
 
 import Foundation
 
+/// Structure used to match API response
 struct MovieResponse : Decodable {
     var page : Int
     var results : [Movie]
     var total_pages : Int
 }
 
+/// Structure used to match API response for a particular movie
 struct Movie : Decodable {
     var poster_path : String?
     var overview : String

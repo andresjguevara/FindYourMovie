@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED0AC7BB24EDE44600C6DE4F /* MovieSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0AC7BA24EDE44600C6DE4F /* MovieSearchController.swift */; };
 		EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */; };
 		EDC85E3424EC2E8C0045E421 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */; };
 		EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ED0AC7BA24EDE44600C6DE4F /* MovieSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieSearchController.swift; sourceTree = "<group>"; };
 		EDC85E2E24EC2E8B0045E421 /* FindYourMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindYourMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */,
+				ED0AC7BA24EDE44600C6DE4F /* MovieSearchController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED0AC7BB24EDE44600C6DE4F /* MovieSearchController.swift in Sources */,
 				EDC85E5224EC5C200045E421 /* Movie.swift in Sources */,
 				EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */,
 				EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */,

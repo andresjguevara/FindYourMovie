@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Custom cell to display the poster, name, release date, an overview of a movie
 class MovieCell: UITableViewCell {
 
     override func awakeFromNib() {
