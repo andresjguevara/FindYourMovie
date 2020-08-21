@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "56093A98-2819-4D17-8A42-2E691B1C5360"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0D50BCD6-AE7D-4CE3-B7FA-70E4E5D948AF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FindYourMovie/Network/MovieManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "getMoviesNames(query:page:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0D50BCD6-AE7D-4CE3-B7FA-70E4E5D948AF - 18d715c71617976"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "default argument 1 of FindYourMovie.MovieManager.getMoviesNames(query: Swift.String, page: Swift.String, completion: (Swift.Result&lt;(Swift.Array&lt;FindYourMovie.Movie&gt;, Swift.Int), FindYourMovie.MovieManager.MovieManagerError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "FindYourMovie"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andres.guevaracaprio/code/FindYourMovie/FindYourMovie/Network/MovieManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  uuid = "0D50BCD6-AE7D-4CE3-B7FA-70E4E5D948AF - 19281b77e3726d9d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FindYourMovie.MovieManager.getMoviesNames(query: Swift.String, page: Swift.String, completion: (Swift.Result&lt;(Swift.Array&lt;FindYourMovie.Movie&gt;, Swift.Int), FindYourMovie.MovieManager.MovieManagerError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "FindYourMovie"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andres.guevaracaprio/code/FindYourMovie/FindYourMovie/Network/MovieManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "320">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F5EC3DC1-9950-4193-86BB-0CB0E1CEF4D7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FindYourMovie/Network/MovieManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "MovieManager"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BB519E32-DE1B-4A00-9A06-13F951CC64C1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FindYourMovie/Network/MovieManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "getMoviesNames(query:page:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
