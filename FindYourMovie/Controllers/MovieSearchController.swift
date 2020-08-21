@@ -10,7 +10,7 @@ import UIKit
 
 /// Controller used when the user is going to search for movies. This is a Table View that displays the last 10 searches made by the user.
 class MovieSearchController: UITableViewController {
-
+    
     var searches = [String]()
     var parentController : MovieViewController?
     
@@ -19,13 +19,13 @@ class MovieSearchController: UITableViewController {
         tableView.backgroundColor = UIColor.lightGray
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SearchCell")
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searches.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell")!
         configureCell(cellToConfigure: cell, movieName: searches[indexPath.row])
@@ -43,8 +43,11 @@ class MovieSearchController: UITableViewController {
     private func configureCell(cellToConfigure: UITableViewCell, movieName : String){
         cellToConfigure.textLabel?.text = movieName
         cellToConfigure.textLabel?.font = UIFont(name: "Avenir Next", size: 17)
-        cellToConfigure.backgroundColor = UIColor.lightGray
+        if #available(iOS 13.0, *) {
+            cellToConfigure.backgroundColor = UIColor.systemGray3
+        } else {
+            cellToConfigure.backgroundColor = UIColor.lightGray        }
         
     }
-
+    
 }

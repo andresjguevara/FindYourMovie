@@ -21,4 +21,20 @@ struct Movie : Decodable {
     var overview : String
     var release_date : String
     var title : String
+    
+    /// Returns formatted date from "yyyy-MM-dd" format to "MMM dd, yyyy"
+    func getReleaseDateWithDateFormat() -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd"
+
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "MMM dd,yyyy"
+
+        if let date = dateFormatterGet.date(from: self.release_date) {
+            return (dateFormatterPrint.string(from: date))
+        } else {
+            return self.release_date
+        }
+
+    }
 }

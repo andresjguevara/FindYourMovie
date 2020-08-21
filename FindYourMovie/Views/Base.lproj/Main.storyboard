@@ -49,7 +49,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="trailingMargin" secondItem="VuT-PD-3hu" secondAttribute="trailing" constant="10" id="5YQ-Rr-cK1"/>
                                         <constraint firstItem="6k5-SV-971" firstAttribute="leading" secondItem="BRT-dc-A0b" secondAttribute="leadingMargin" constant="10" id="Hix-DN-a6w"/>

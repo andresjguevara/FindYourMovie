@@ -53,9 +53,12 @@ class MovieManager {
     ///     -  result: On  success, a pair of movie results and page number is returned. On failure, a error enum is returned
     func getMoviesNames(query : String, page : String, completion: @escaping(_ result: Result<MovieResult,MovieManagerError>) -> Void) {
         
-        let movieNameformatted = query.replacingOccurrences(of: " ", with: "+")
-         
-        let getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(movieNameformatted)&page=\(page)"
+        var getURL = ""
+        
+        if let movieNameformatted = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
+            getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(movieNameformatted)&page=\(page)"
+        }
+    
         
         guard let url = URL(string: getURL) else {
             DispatchQueue.main.async {
