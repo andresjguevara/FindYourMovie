@@ -17,9 +17,9 @@ class MovieViewController: UITableViewController {
     var searchController : UISearchController!
     
     let movieViewModel = MoviewViewModel(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-
-    let FETCH_THRESHOLD = 0.9
-
+    
+    let FETCH_THRESHOLD = 0.95
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +61,7 @@ class MovieViewController: UITableViewController {
             requestMovies(movieName: self.currentMovieSearch, isFollowUpRequest: true)
         }
     }
-
+    
     
     /// Makes a call to the API requesting movies.
     ///
@@ -72,15 +72,26 @@ class MovieViewController: UITableViewController {
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
-        do {
-            try self.movieViewModel.makeAPIRequest(movieName: movieName)
-        } catch let error as MovieManager.MovieManagerError {
-            self.showError(errorToDisplay: error)
-        } catch {
-            self.showError(errorToDisplay: nil)
+        self.movieViewModel.makeAPIRequest(movieName: movieName, isFollowUpRequest: isFollowUpRequest)
+        {
+            [weak self] result in
+            
+            switch result {
+                
+            case .success(_):
+                DispatchQueue.main.async {
+                    self?.currentMovieSearch = movieName
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.showError(errorToDisplay: error)
+                    self?.tableView.reloadData()
+                }
+            }
         }
-        self.tableView.reloadData()
-        
+
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
     /// Displays an error as an alert. It uses the parameters custom error message to display.
@@ -104,7 +115,7 @@ class MovieViewController: UITableViewController {
 extension MovieViewController {
     func configureCell(cell : MovieCell, at index: Int){
         cell.name.text = self.movieViewModel.getTitleForMovie(at: index)
-        cell.releaseDate.text = self.movieViewModel.getTitleForMovie(at: index)
+        cell.releaseDate.text = self.movieViewModel.getReleaseDateForMovie(at: index)
         cell.overview.text = self.movieViewModel.getOverviewForMovie(at: index)
         cell.poster.load(urlAsString: self.movieViewModel.getPosterForMovie(at: index))
     }
@@ -149,10 +160,10 @@ extension MovieViewController: UISearchResultsUpdating {
     
     // Called when the search bar's text has changed or when the search bar becomes first responder.
     func updateSearchResults(for searchController: UISearchController) {
-
+        
         if let resultsController = searchController.searchResultsController as? MovieSearchController {
             resultsController.parentController = self
-            resultsController.searches = self.movieViewModel.getLatestSearches()
+            resultsController.viewModel = self.movieViewModel
             resultsController.tableView.reloadData()
         }
     }
@@ -180,7 +191,7 @@ extension UIImageView {
     }
     private func setDefaultImage() {
         if #available(iOS 13.0, *) {
-        DispatchQueue.main.async {
+            DispatchQueue.main.async {
                 self.image = UIImage(systemName: "questionmark.square")
             }
         } else {

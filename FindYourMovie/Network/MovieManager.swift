@@ -61,17 +61,13 @@ class MovieManager {
     
         
         guard let url = URL(string: getURL) else {
-            DispatchQueue.main.async {
                 completion(.failure(.errorRequestingData(errorMessage: "Invalid URL")))
-            }
             return
         }
         let dataTask = URLSession.shared.dataTask(with: url) {data, response, error in
             
             if let error = error {
-                DispatchQueue.main.async {
                     completion(.failure(.errorRequestingData(errorMessage: error.localizedDescription)))
-                }
             } else if
                 let jsonData = data,
                 let response = response as? HTTPURLResponse,
@@ -81,21 +77,14 @@ class MovieManager {
                     let movieResponse = try decoder.decode(MovieResponse.self, from: jsonData)
                     var movieResults = movieResponse.results
                     if movieResponse.results.isEmpty {
-                        DispatchQueue.main.async {
                             completion(.failure(.movieNotFound(errorMessage: "Search returned no results")))
-                        }
                     } else {
                         self.setMoviePosterPath(movies: &movieResults)
-                        DispatchQueue.main.async {
                             completion(.success((movieResults, movieResponse.total_pages)))
-                        }
                     }
                     
                 } catch {
-                    DispatchQueue.main.async {
                         completion(.failure(.errorProcessingData(errorMessage: error.localizedDescription)))
-                    }
-                    
                 }
             }
         }

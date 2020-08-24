@@ -15,11 +15,11 @@ class MoviewViewModel {
     private var currentSearch = ""
     private var lastSearches = [String]()
     private let defaults = UserDefaults.standard
+    var isPageFetchRequired = [Int : Bool]()
     
-    var movies : [Movie]
+    private var movies = [Movie]()
     private let context :  NSManagedObjectContext
     init(context :  NSManagedObjectContext) {
-        self.movies = [Movie]()
         self.context = context
         // Load latestes searches at loading time
         if let searches = self.defaults.array(forKey: "lastSearches") as? [String] {
@@ -40,7 +40,7 @@ class MoviewViewModel {
     }
     
     func getReleaseDateForMovie(at index: Int) -> String {
-        return movies[index].release_date
+        return movies[index].release_date ?? "No Release Date Available"
     }
     
     func getMovieCount() -> Int {
@@ -70,44 +70,45 @@ class MoviewViewModel {
     ///     - isFollowUpRequest:indicates if the request requires a page number. If true, the page number will be updated to the next available page.
     /// if false, the request will be done to the first page
     /// - Throws: If there was an error while performing the API request
-    func makeAPIRequest(movieName : String, isFollowUpRequest: Bool = false) throws {
-        var returnError : MovieManager.MovieManagerError?
+    func makeAPIRequest(movieName : String, isFollowUpRequest: Bool = false, completion: @escaping (Result<[Movie], MovieManager.MovieManagerError>) -> Void)  {
         var pageNumber : Int
         if isFollowUpRequest && self.requiresPaging() {
+            self.isPageFetchRequired[self.currentPage] = false
             pageNumber = self.currentPage + 1
-        } else {
+            print(movieName)
+            print(pageNumber)
+        } else if self.currentPage == 1 && !isFollowUpRequest {
             pageNumber = 1
+        } else {
+            return
         }
         
         MovieManager.shared.getMoviesNames(query: movieName, page: String(pageNumber))
         { [weak self] results in
-            guard let self = self else {return}
             switch results {
             case .success(let movieResult):
                 if pageNumber > 1 {
-                    self.movies.append(contentsOf: movieResult.0)
-                    self.currentPage += 1
+                    self?.movies.append(contentsOf: movieResult.0)
+                    self?.currentPage += 1
+                    completion(.success(self!.movies))
                 } else {
-                    self.movies = movieResult.0
-                    self.totalPages = movieResult.1
-                    self.currentSearch = movieName
-                    self.currentPage = 1
-                    self.updateLastSearchResults(movieName: movieName)
+                    self?.movies = movieResult.0
+                    self?.totalPages = movieResult.1
+                    self?.currentSearch = movieName
+                    self?.updateLastSearchResults(movieName: movieName)
+                    completion(.success(self!.movies))
                 }
                 
             case .failure(let error):
-                returnError = error
+                completion(.failure(error as MovieManager.MovieManagerError))
             }
-        }
-        if let error = returnError as MovieManager.MovieManagerError? {
-            throw error
         }
         
     }
     
     /// Returns if the request qualifies as a new page request
     private func requiresPaging() -> Bool {
-        return self.currentPage < self.totalPages
+        return self.currentPage < self.totalPages && self.isPageFetchRequired[self.currentPage] ?? true
     }
     
     /// Updates the last searches done by the user. No duplicates are added and the size is kept to 10
