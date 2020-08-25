@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		ED0AC7BB24EDE44600C6DE4F /* MovieSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0AC7BA24EDE44600C6DE4F /* MovieSearchController.swift */; };
+		ED0AC7BF24F040E100C6DE4F /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0AC7BE24F040E100C6DE4F /* MovieViewModel.swift */; };
 		EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */; };
 		EDC85E3424EC2E8C0045E421 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */; };
 		EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC85E3524EC2E8C0045E421 /* MovieViewController.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		ED0AC7BA24EDE44600C6DE4F /* MovieSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieSearchController.swift; sourceTree = "<group>"; };
+		ED0AC7BE24F040E100C6DE4F /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		EDC85E2E24EC2E8B0045E421 /* FindYourMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindYourMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDC85E3124EC2E8C0045E421 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDC85E3324EC2E8C0045E421 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +49,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ED0AC7C024F040E700C6DE4F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				ED0AC7BE24F040E100C6DE4F /* MovieViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EDC85E2524EC2E8B0045E421 = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +76,7 @@
 		EDC85E3024EC2E8B0045E421 /* FindYourMovie */ = {
 			isa = PBXGroup;
 			children = (
+				ED0AC7C024F040E700C6DE4F /* ViewModel */,
 				EDC85E4824EC33F00045E421 /* Delegates */,
 				EDC85E4924EC33FA0045E421 /* Controllers */,
 				EDC85E4B24EC34110045E421 /* Views */,
@@ -198,6 +209,7 @@
 				EDC85E3624EC2E8C0045E421 /* MovieViewController.swift in Sources */,
 				EDC85E3224EC2E8C0045E421 /* AppDelegate.swift in Sources */,
 				EDC85E3C24EC2E8C0045E421 /* FindYourMovie.xcdatamodeld in Sources */,
+				ED0AC7BF24F040E100C6DE4F /* MovieViewModel.swift in Sources */,
 				EDC85E4D24EC412C0045E421 /* MovieCell.swift in Sources */,
 				EDC85E4F24EC59B10045E421 /* MovieManager.swift in Sources */,
 				EDC85E3424EC2E8C0045E421 /* SceneDelegate.swift in Sources */,

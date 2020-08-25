@@ -53,22 +53,21 @@ class MovieManager {
     ///     -  result: On  success, a pair of movie results and page number is returned. On failure, a error enum is returned
     func getMoviesNames(query : String, page : String, completion: @escaping(_ result: Result<MovieResult,MovieManagerError>) -> Void) {
         
-        let movieNameformatted = query.replacingOccurrences(of: " ", with: "+")
-         
-        let getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(movieNameformatted)&page=\(page)"
+        var getURL = ""
+        
+        if let movieNameformatted = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
+            getURL = "https://api.themoviedb.org/3/search/movie?api_key=\(MovieManager.API_KEY)&query=\(movieNameformatted)&page=\(page)"
+        }
+    
         
         guard let url = URL(string: getURL) else {
-            DispatchQueue.main.async {
                 completion(.failure(.errorRequestingData(errorMessage: "Invalid URL")))
-            }
             return
         }
         let dataTask = URLSession.shared.dataTask(with: url) {data, response, error in
             
             if let error = error {
-                DispatchQueue.main.async {
                     completion(.failure(.errorRequestingData(errorMessage: error.localizedDescription)))
-                }
             } else if
                 let jsonData = data,
                 let response = response as? HTTPURLResponse,
@@ -78,21 +77,14 @@ class MovieManager {
                     let movieResponse = try decoder.decode(MovieResponse.self, from: jsonData)
                     var movieResults = movieResponse.results
                     if movieResponse.results.isEmpty {
-                        DispatchQueue.main.async {
                             completion(.failure(.movieNotFound(errorMessage: "Search returned no results")))
-                        }
                     } else {
                         self.setMoviePosterPath(movies: &movieResults)
-                        DispatchQueue.main.async {
                             completion(.success((movieResults, movieResponse.total_pages)))
-                        }
                     }
                     
                 } catch {
-                    DispatchQueue.main.async {
                         completion(.failure(.errorProcessingData(errorMessage: error.localizedDescription)))
-                    }
-                    
                 }
             }
         }
