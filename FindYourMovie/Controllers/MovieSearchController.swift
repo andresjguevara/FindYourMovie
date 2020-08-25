@@ -16,7 +16,7 @@ class MovieSearchController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = UIColor.lightGray
+        tableView.backgroundColor = UIColor.black
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SearchCell")
     }
     
@@ -43,11 +43,7 @@ class MovieSearchController: UITableViewController {
     private func configureCell(cellToConfigure: UITableViewCell, movieName : String){
         cellToConfigure.textLabel?.text = movieName
         cellToConfigure.textLabel?.font = UIFont(name: "Avenir Next", size: 17)
-        if #available(iOS 13.0, *) {
-            cellToConfigure.backgroundColor = UIColor.lightGray
-        } else {
-            cellToConfigure.backgroundColor = UIColor.lightGray        }
-        
+        cellToConfigure.backgroundColor = UIColor.black
+        cellToConfigure.textLabel?.textColor = UIColor.white
     }
-    
 }
