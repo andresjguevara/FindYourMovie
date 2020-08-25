@@ -15,7 +15,7 @@ class MoviewViewModel {
     private var currentSearch = ""
     private var lastSearches = [String]()
     private let defaults = UserDefaults.standard
-    var isPageFetchRequired = [Int : Bool]()
+    private var isPageFetchRequired = [Int : Bool]()
     
     private var movies = [Movie]()
     private let context :  NSManagedObjectContext
@@ -52,6 +52,7 @@ class MoviewViewModel {
     }
     
     func findOrCreateMovie(movieName : String) -> Movie {
+        // TODO: Add CoreData support to store movies
         return movies.first!
     }
     
@@ -67,16 +68,14 @@ class MoviewViewModel {
     ///
     ///- Parameters:
     ///     - movieName: name of the movie to search
-    ///     - isFollowUpRequest:indicates if the request requires a page number. If true, the page number will be updated to the next available page.
-    /// if false, the request will be done to the first page
-    /// - Throws: If there was an error while performing the API request
-    func makeAPIRequest(movieName : String, isFollowUpRequest: Bool = false, completion: @escaping (Result<[Movie], MovieManager.MovieManagerError>) -> Void)  {
+    ///     - isFollowUpRequest:indicates if the request requires a page number. If true, the page number will be updated to the next available page. If false, the request will be done to the first page
+    ///     - completion: A Result object is return.
+    ///     -  result: On  success, a list of movies is returned. On failure, a error enum is returned
+    func makeAPIRequest(movieName : String, isFollowUpRequest: Bool = false, completion: @escaping (_ result: Result<[Movie], MovieManager.MovieManagerError>) -> Void)  {
         var pageNumber : Int
         if isFollowUpRequest && self.requiresPaging() {
             self.isPageFetchRequired[self.currentPage] = false
             pageNumber = self.currentPage + 1
-            print(movieName)
-            print(pageNumber)
         } else if self.currentPage == 1 && !isFollowUpRequest {
             pageNumber = 1
         } else {

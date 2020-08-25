@@ -71,7 +71,6 @@ class MovieViewController: UITableViewController {
     func requestMovies(movieName : String, isFollowUpRequest : Bool = false)  {
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        
         self.movieViewModel.makeAPIRequest(movieName: movieName, isFollowUpRequest: isFollowUpRequest)
         {
             [weak self] result in
@@ -81,6 +80,7 @@ class MovieViewController: UITableViewController {
             case .success(_):
                 DispatchQueue.main.async {
                     self?.currentMovieSearch = movieName
+                    self?.navigationItem.title = "Search: \(movieName)"
                     self?.tableView.reloadData()
                 }
             case .failure(let error):
